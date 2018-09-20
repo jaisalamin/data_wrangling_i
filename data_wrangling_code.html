@@ -143,6 +143,9 @@ $(document).ready(function () {
 ## )</code></pre>
 <pre class="r"><code>litters_data = janitor::clean_names(litters_data)</code></pre>
 </div>
+<div id="sept.-20-lecture" class="section level2">
+<h2>Sept. 20 Lecture</h2>
+</div>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <p>Loading in new data set</p>
@@ -213,6 +216,166 @@ $(document).ready(function () {
 ##  ▁▃▇▇▇▆▁▁
 ##  ▂▃▃▇▆▂▁▁</code></pre>
 <p>View function allows you to view entire data set in console, could cause errors in code chunks.</p>
+<pre class="r"><code>head(pups_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
+## 1 #85               1       4      13        7      11
+## 2 #85               1       4      13        7      12
+## 3 #1/2/95/2         1       5      13        7       9
+## 4 #1/2/95/2         1       5      13        8      10
+## 5 #5/5/3/83/3-3     1       5      13        8      10
+## 6 #5/5/3/83/3-3     1       5      14        6       9</code></pre>
+<pre class="r"><code>tail(pups_data)</code></pre>
+<pre><code>## # A tibble: 6 x 6
+##   litter_number   sex pd_ears pd_eyes pd_pivot pd_walk
+##   &lt;chr&gt;         &lt;int&gt;   &lt;int&gt;   &lt;int&gt;    &lt;int&gt;   &lt;int&gt;
+## 1 #2/95/2           2       4      12        7       9
+## 2 #2/95/2           2       3      13        6       8
+## 3 #2/95/2           2       3      13        7       9
+## 4 #82/4             2       4      13        7       9
+## 5 #82/4             2       3      13        7       9
+## 6 #82/4             2       3      13        7       9</code></pre>
+<pre class="r"><code>skimr::skim(pups_data)</code></pre>
+<pre><code>## Skim summary statistics
+##  n obs: 313 
+##  n variables: 6 
+## 
+## ── Variable type:character ──────────────────────────────────────────────────────────────────────────────────────────
+##       variable missing complete   n min max empty n_unique
+##  litter_number       0      313 313   3  15     0       49
+## 
+## ── Variable type:integer ────────────────────────────────────────────────────────────────────────────────────────────
+##  variable missing complete   n  mean   sd p0 p25 p50 p75 p100     hist
+##   pd_ears      18      295 313  3.68 0.59  2   3   4   4    5 ▁▁▅▁▁▇▁▁
+##   pd_eyes      13      300 313 12.99 0.62 12  13  13  13   15 ▂▁▇▁▁▂▁▁
+##  pd_pivot      13      300 313  7.09 1.51  4   6   7   8   12 ▃▆▇▃▂▁▁▁
+##   pd_walk       0      313 313  9.5  1.34  7   9   9  10   14 ▁▅▇▅▃▂▁▁
+##       sex       0      313 313  1.5  0.5   1   1   2   2    2 ▇▁▁▁▁▁▁▇</code></pre>
+</div>
+<div id="other-file-formats" class="section level2">
+<h2>Other File Formats</h2>
+<p>Read in MLB data: Excel</p>
+<pre class="r"><code>mlb_data = readxl::read_excel(path = &quot;./data/mlb11.xlsx&quot;)
+
+mlb_subset = readxl::read_excel(path = &quot;./data/mlb11.xlsx&quot;, range = &quot;A1:E17&quot;)</code></pre>
+<p>Read in Pulse Data: SAS</p>
+<pre class="r"><code>pulse_data = haven::read_sas(&quot;./data/public_pulse_data.sas7bdat&quot;)</code></pre>
+</div>
+<div id="sept.-20-2018-lecture" class="section level2">
+<h2>Sept. 20, 2018 Lecture</h2>
+<pre class="r"><code>litters_data = read_csv(&quot;./data/FAS_litters.csv&quot;,
+  col_types = &quot;ccddiiii&quot;)
+litters_data = janitor::clean_names(litters_data)
+
+pups_data = read_csv(&quot;./data/FAS_pups.csv&quot;,
+  col_types = &quot;ciiiii&quot;)
+pups_data = janitor::clean_names(pups_data)</code></pre>
+</div>
+<div id="select-variables" class="section level2">
+<h2>Select variables</h2>
+<p>By listing:</p>
+<pre class="r"><code>select(litters_data, group, litter_number, gd0_weight)
+
+select(litters_data, litter_number, gd0_weight, pups_survive)</code></pre>
+<p>By specifying a range:</p>
+<pre class="r"><code>select(litters_data, gd_of_birth:pups_survive)
+select(litters_data, group, gd_of_birth:pups_survive)</code></pre>
+<p>By saying what you want to remove</p>
+<pre class="r"><code>select(litters_data, -litter_number)</code></pre>
+<p>Selecting and renaming simultaneously or separately:</p>
+<pre class="r"><code>select(litters_data, group, litter_number, gest_day_0_weight = gd0_weight)
+rename(litters_data, gest_day_0_weight = gd0_weight)</code></pre>
+<p>Using select helpers:</p>
+<pre class="r"><code>select(litters_data, starts_with(&quot;gd&quot;))
+
+select(litters_data, litter_number, starts_with(&quot;gd&quot;))
+
+select(litters_data, litter_number, starts_with(&quot;pup&quot;))
+
+select(litters_data, litter_number, everything())</code></pre>
+</div>
+<div id="filter-observations" class="section level2">
+<h2>Filter Observations</h2>
+<pre class="r"><code>filter(litters_data, gd0_weight &lt; 25)
+filter(litters_data, gd0_weight &gt;= 25)
+
+filter(litters_data, pups_born_alive == 8)
+
+filter(litters_data, is.na(gd0_weight))
+filter(litters_data, !is.na(gd0_weight))
+
+filter(litters_data, group == &quot;Low8&quot;)
+filter(litters_data, group %in% c(&quot;Low7&quot;, &quot;Low8&quot;))
+
+filter(litters_data, pups_born_alive %in% 4:6)
+filter(litters_data, pups_born_alive %in% 4:7, !is.na(gd0_weight))
+
+filter(litters_data, sex == 1)
+filter(litters_data, sex == 2, pd_walk &lt; 11)</code></pre>
+</div>
+<div id="mutate" class="section level2">
+<h2>Mutate</h2>
+<p>Creating variables and modifying existing variables:</p>
+<pre class="r"><code>mutate(litters_data,
+       wt_gain = gd18_weight - gd0_weight,
+       group = tolower(group))
+
+mutate(litters_data,
+       wt_gain = gd18_weight = gd0_weight,
+       wt_gain_squared = wt_gain^2
+       )</code></pre>
+</div>
+<div id="arrange" class="section level2">
+<h2>Arrange</h2>
+<p>Arranging the data:</p>
+<pre class="r"><code>arrange(litters_data, gd0_weight)
+arrange(litters_data, pups_born_alive, gd0_weight)
+arrange(litters_data, desc(pups_born_alive), gd0_weight)</code></pre>
+</div>
+<div id="piping" class="section level2">
+<h2>Piping</h2>
+<p>Looking at intermediate object approach:</p>
+<pre class="r"><code>litters_data_raw = read_csv(&quot;./data/FAS_litters.csv&quot;,
+  col_types = &quot;ccddiiii&quot;)
+litters_data_clean_names = janitor::clean_names(litters_data_raw)
+litters_data_selected_cols = select(litters_data_clean_names, -pups_survive)
+litters_data_with_vars = mutate(litters_data_selected_cols, 
+  wt_gain = gd18_weight - gd0_weight,
+  group = tolower(group))
+litters_data_with_vars</code></pre>
+<p>Using nested function calls:</p>
+<pre class="r"><code>litters_data_clean = 
+  mutate(
+    select(
+      janitor::clean_names(
+        read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;)
+        ), 
+    -pups_survive
+    ),
+  wt_gain = gd18_weight - gd0_weight,
+  group = tolower(group)
+  )
+litters_data_clean</code></pre>
+<p>Using piping: shift+command+m</p>
+<pre class="r"><code>read_csv(&quot;.data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(-pups_survive) %&gt;% 
+  mutate(
+    wt_gain = gd18_weight = gd0_weight, 
+    group = tolower(group)
+  ) %&gt;% 
+  filter(!is.na(gd0_weight))</code></pre>
+<p>Illustrate placeholder use with <code>lm</code></p>
+<pre class="r"><code>read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  select(-pups_survive) %&gt;% 
+  mutate(
+    wt_gain = gd18_weight - gd0_weight, 
+    group = tolower(group)
+  ) %&gt;% 
+  filter(!is.na(gd0_weight)) %&gt;% 
+  lm(gd18_weight - gd0_weight, data = .)</code></pre>
 </div>
 
 
