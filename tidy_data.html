@@ -180,6 +180,19 @@ pulse_data</code></pre>
 <pre><code>## Warning: attributes are not identical across measure variables;
 ## they will be dropped</code></pre>
 </div>
+<div id="revisit-fas-litters-data" class="section level2">
+<h2>Revisit FAS litters data</h2>
+<pre class="r"><code>litters_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
+  janitor::clean_names() %&gt;% 
+  separate(group, into = c(&quot;dose&quot;, &quot;day&quot;), 3)</code></pre>
+<p>Learning assessment:</p>
+<pre class="r"><code>litters_data = read_csv(&quot;./data/FAS_litters.csv&quot;, col_types = &quot;ccddiiii&quot;) %&gt;% 
+  janitor::clean_names() %&gt;%
+  select(litter_number, ends_with(&quot;weight&quot;)) %&gt;% 
+  gather(key = &quot;gest_day&quot;, value = &quot;weight&quot;, gd0_weight:gd18_weight) %&gt;% 
+  mutate(gest_day = recode(gest_day, &quot;gd0_weight&quot; = 0, &quot;gd18_weight&quot; = 18)) %&gt;% 
+  arrange(litter_number)</code></pre>
+</div>
 
 
 

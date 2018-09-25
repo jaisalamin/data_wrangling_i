@@ -46,3 +46,22 @@ pulse_df =
   mutate(visit = replace(visit, visit == "bl", "00m"))
 ```
 
+## Revisit FAS litters data
+
+```{r}
+litters_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>% 
+  janitor::clean_names() %>% 
+  separate(group, into = c("dose", "day"), 3)
+```
+
+Learning assessment:
+```{r}
+litters_data = read_csv("./data/FAS_litters.csv", col_types = "ccddiiii") %>% 
+  janitor::clean_names() %>%
+  select(litter_number, ends_with("weight")) %>% 
+  gather(key = "gest_day", value = "weight", gd0_weight:gd18_weight) %>% 
+  mutate(gest_day = recode(gest_day, "gd0_weight" = 0, "gd18_weight" = 18)) %>% 
+  arrange(litter_number)
+  
+```
+
