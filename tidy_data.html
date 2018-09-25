@@ -193,6 +193,40 @@ pulse_data</code></pre>
   mutate(gest_day = recode(gest_day, &quot;gd0_weight&quot; = 0, &quot;gd18_weight&quot; = 18)) %&gt;% 
   arrange(litter_number)</code></pre>
 </div>
+<div id="spread" class="section level2">
+<h2>Spread</h2>
+<p>Create <code>analysis_result</code></p>
+<pre class="r"><code>analysis_result = tibble(
+  group = c(&quot;treatment&quot;, &quot;treatment&quot;, &quot;placebo&quot;, &quot;placebo&quot;),
+  time = c(&quot;pre&quot;, &quot;post&quot;, &quot;pre&quot;, &quot;post&quot;),
+  mean = c(4, 8, 3.5, 4)
+)</code></pre>
+<p>Make it readable: spread serves as reverse function of gather</p>
+<pre class="r"><code>analysis_result %&gt;% 
+  spread(key = time, value = mean) %&gt;% 
+  knitr::kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">group</th>
+<th align="right">post</th>
+<th align="right">pre</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">placebo</td>
+<td align="right">4</td>
+<td align="right">3.5</td>
+</tr>
+<tr class="even">
+<td align="left">treatment</td>
+<td align="right">8</td>
+<td align="right">4.0</td>
+</tr>
+</tbody>
+</table>
+</div>
 
 
 
